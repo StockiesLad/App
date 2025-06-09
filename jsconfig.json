@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target":       "ES6",
+    "jsx":          "react",
+    "module":       "ESNext",
+    "moduleResolution": "node",
+    "baseUrl":      ".",
+    "paths": {
+      // in case you want to alias folders
+      "@components/*": ["components/*"],
+      "@types": ["types.d.ts"]
+    }
+  },
+  "include": [
+    "App.js",
+    "screens/**/*",
+    "components/**/*"
+   ]
+}

@@ -1,20 +1,14 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import Runtime from "session/Runtime";
+
+export const WHITE = '#FFFFFF'
+export const GRAY = '#D9D9D9'
+export const RED = '#941A1D'
+export const BLACK = '#262626'
+
+const runtime = new Runtime();
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+    var screen = runtime.screen;
+    screen.run();
+    return screen.render();
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

@@ -17,7 +17,7 @@ export default class HomeScreen extends AbstractScreen {
         );
     }
 
-    render() {
+    fetchData() {
         return (
             <View style={this.styles.container}>
             <Text>Home Screen</Text>
@@ -26,8 +26,8 @@ export default class HomeScreen extends AbstractScreen {
         );
     }
 
-    run() {
-        if (this.runtime.isLoggedIn() && !this.runtime.screen instanceof LoginScreen)
+    upload() {
+        if (this.runtime.isLoggedIn())
             this.runtime.setScreen(new LoginScreen(this.runtime));
     }
 }

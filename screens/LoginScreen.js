@@ -14,7 +14,7 @@ export default class LoginScreen extends AbstractScreen {
         }));
     }
 
-    render() {
+    fetchData() {
         return (
             <View style={this.styles.container}>
             <Text>Login Screen</Text>

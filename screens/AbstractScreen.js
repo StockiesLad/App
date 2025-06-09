@@ -15,10 +15,7 @@ export default class AbstractScreen {
         this.runtime = runtime;
     }
 
-    render() {
-    }
+    fetchData() {}
 
-    run() {
-        
-    }
+    upload() {}
 }

@@ -11,7 +11,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { BLACK, BURGUNDY, getAnnouncements, getProfile, GREY, WHITE } from 'session/Runtime';
 
-export default function HomeScreen() {
+export default function HomeScreen({navigation}) {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
@@ -21,7 +21,7 @@ export default function HomeScreen() {
         <TouchableOpacity style={styles.logoutBtn}>
           <Text style={styles.logoutText}>Log Out</Text>
         </TouchableOpacity>
-        <Text style={styles.username}>{getProfile}</Text>
+        <Text style={styles.username}>{getProfile()}</Text>
       </View>
 
       <ScrollView contentContainerStyle={styles.body}>

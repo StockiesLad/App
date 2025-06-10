@@ -10,12 +10,13 @@ import {
   Keyboard,
   Pressable,
 } from 'react-native';
-import { TouchableWithoutFeedback } from 'react-native-web';
-import { BLACK, BURGUNDY, createAccount, GREY, login, WHITE } from 'session/Runtime';
+import { ActivityIndicator } from 'react-native-web';
+import { BLACK, BURGUNDY, createAccount, handleLogin, GREY, WHITE } from 'session/Runtime';
 
-export default function LoginScreen() {
+export default function LoginScreen({navigation}) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
    return (
     // 1) This Pressable catches taps *outside* your form
@@ -63,20 +64,15 @@ export default function LoginScreen() {
 
           {/* Buttons */}
           <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={login}
-            >
-              <Text style={styles.buttonText}>Login</Text>
+            <TouchableOpacity 
+              style={styles.button} 
+              onPress={() =>handleLogin(navigation, password, email, setLoading)} 
+              disabled={loading}>
+              {loading ? <ActivityIndicator color={WHITE} /> : <Text style={styles.buttonText}>Login</Text>}
             </TouchableOpacity>
 
-            <TouchableOpacity
-              style={styles.button}
-              onPress={createAccount}
-            >
-              <Text style={styles.buttonText}>
-                Create new account
-              </Text>
+            <TouchableOpacity style={styles.button} onPress={createAccount} disabled={loading}>
+              <Text style={styles.buttonText}>Create new account</Text>
             </TouchableOpacity>
           </View>
         </View>

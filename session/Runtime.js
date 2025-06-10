@@ -1,18 +1,30 @@
-import HomeScreen from "screens/HomeScreen";
+export const 
+    WHITE = '#fff',
+    GREY = '#D9D9D9',
+    BURGUNDY = '#941A1D',
+    BLACK = '#262626';
 
-export default class Runtime {
-    screen;
-    loginSession;
-    constructor() {
-        this.screen = new HomeScreen(this);
-        this.loginSession = null
-    }
+export function getProfile() {
+    return 'John Smith';
+}
 
-    isLoggedIn() {
-        return this.loginSession != null;
-    }
+export function isLoggedIn() {
+    return getProfile() != null;
+}
 
-    setScreen(/** @type {import("@types").AbstractScreen} */ screen) {
-        this.screen = screen;
-    }
+export function login() {
+
+}
+
+export function createAccount() {
+    
+}
+
+export function getAnnouncements() {
+    return [
+        'Office closed Fri 12th',
+        'New HR policy out now',
+        'Quarterly report due 30th',
+        'Happy hour Friday 5pm',
+    ].filter((e, i) => i >= 4);
 }

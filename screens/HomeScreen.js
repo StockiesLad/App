@@ -9,7 +9,7 @@ import {
   StatusBar,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { BLACK, BURGUNDY, getAnnouncements, getProfile, GREY, WHITE } from 'session/Runtime';
+import { BLACK, BURGUNDY, getProfile, GREY, logOut, WHITE } from 'session/Runtime';
 
 export default function HomeScreen({navigation}) {
   return (
@@ -18,26 +18,16 @@ export default function HomeScreen({navigation}) {
 
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity style={styles.logoutBtn}>
+        <TouchableOpacity style={styles.logoutBtn} onPress={logOut()}>
           <Text style={styles.logoutText}>Log Out</Text>
         </TouchableOpacity>
         <Text style={styles.username}>{getProfile()}</Text>
       </View>
 
       <ScrollView contentContainerStyle={styles.body}>
-        {/* Announcements Card */}
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>Announcements</Text>
-          {getAnnouncements().map((item, i) => (
-            <View key={i} style={styles.announceRow}>
-              <Text style={styles.announceText}>{item}</Text>
-            </View>
-          ))}
-        </View>
-
         {/* Buttons */}
-        {['Human Resources', 'Company Intranet', 'Staff Directory'].map((label, i) => (
-          <TouchableOpacity key={i} style={styles.button}>
+        {['HumanResources', 'CompanyIntranet', 'StaffDirectory'].map((label, i) => (
+          <TouchableOpacity key={i} style={styles.button} onPress={() => navigation.replace(label)}>
             <Text style={styles.buttonText}>{label}</Text>
           </TouchableOpacity>
         ))}
@@ -59,12 +49,10 @@ export default function HomeScreen({navigation}) {
   );
 }
 
-const RED = '#8B0000';
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: WHITE,
   },
   header: {
     height: 56,
@@ -103,7 +91,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 4,
-    // elevation for Android
     elevation: 4,
   },
   cardTitle: {
@@ -134,7 +121,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 3,
-    // elevation for Android
     elevation: 3,
   },
   buttonText: {

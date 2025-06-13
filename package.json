@@ -4,7 +4,9 @@
   "main": "index.js",
   "scripts": {
     "start": "expo start",
+    "tunnel": "expo start --tunnel",
     "android": "expo start --android",
+    "open_phone": "emulator -avd Medium_Phone_API_36.0",
     "ios": "expo start --ios",
     "web": "expo start --web"
   },
@@ -22,7 +24,8 @@
     "react-native-web": "^0.20.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.0"
+    "@babel/core": "^7.20.0",
+    "@expo/vector-icons": "^14.1.0"
   },
   "private": true
 }

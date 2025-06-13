@@ -1,22 +1,21 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomeScreen from "screens/HomeScreen";
-import LoginScreen from "screens/LoginScreen";
-import { isLoggedIn, retrieveProfile } from "session/Runtime";
+import StaffDirectory from "screens/StaffDirectory";
+import StaffMetadata from "screens/StaffMetadata";
 
-const Stack = createNativeStackNavigator();
+const ScreenStack = createNativeStackNavigator();
 
 export default function App() {
-    retrieveProfile();
-    return (
-        <NavigationContainer>
-        <Stack.Navigator
-            initialRouteName={isLoggedIn() ? "Home" : "Login"}
+    return (<NavigationContainer>
+        <ScreenStack.Navigator
+            initialRouteName={"Home"}
             screenOptions={{ headerShown: false }}
+            id="Navigator"
         >
-            <Stack.Screen name="Login" component={LoginScreen} />
-            <Stack.Screen name="Home"  component={HomeScreen}  />
-        </Stack.Navigator>
-        </NavigationContainer>
-    );
+            <ScreenStack.Screen name="Home"  component={HomeScreen}/>
+            <ScreenStack.Screen name="StaffDirectory" component={StaffDirectory}/>
+            <ScreenStack.Screen name="StaffMetadata" component={StaffMetadata}/>
+        </ScreenStack.Navigator>
+    </NavigationContainer>);
 }

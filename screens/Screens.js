@@ -1,19 +1,74 @@
-import {BLACK, GREY, USER, WHITE} from "../session/Runtime";
-import {StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import {BLACK, BURGUNDY, GREY, USER, WHITE} from "../session/Runtime";
+import {Platform, SafeAreaView, StatusBar, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import {Ionicons} from "@expo/vector-icons";
 import React, {createContext, useContext, useState} from "react";
 import {useNavigation, useRoute} from "@react-navigation/native";
 
+const NavContext = createContext();
+export const NavProvider = ({ children }) => {
+    const [lastScreen, setLastScreen] = useState(null);
+    return (
+        <NavContext.Provider value={{ lastScreen, setLastScreen }}>
+            {children}
+        </NavContext.Provider>
+    );
+};
+export const useNavHistory = () => useContext(NavContext);
+
+export function Header() {
+    return (<SafeAreaView style={STYLES.headerPad}>
+        <View style={STYLES.header}>
+            <TouchableOpacity style={STYLES.logoutButton}>
+                <Text style={STYLES.logoutText}>Log Out</Text>
+            </TouchableOpacity>
+            <Text style={STYLES.username}>{USER}</Text>
+        </View>
+    </SafeAreaView>);
+}
+
+export function Footer() {
+    const navigation = useNavigation();
+    const route = useRoute();
+    let {lastScreen, setLastScreen} = useNavHistory();
+    return (<View style={STYLES.footer}>
+        <TouchableOpacity disabled={route.name === "Home"} onPress={() => {
+            setLastScreen(route.name);
+            navigation.goBack();
+        }}>
+            <Ionicons
+                name="arrow-back" size={32}
+                style={route.name === "Home" ? STYLES.faded : STYLES.empty}
+            />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+            <Ionicons name="home" size={32} />
+        </TouchableOpacity>
+        <TouchableOpacity disabled={lastScreen == null} onPress={() => {
+            navigation.navigate(lastScreen);
+            setLastScreen(null);
+        }}>
+            <Ionicons
+                name="arrow-forward" size={32}
+                style={lastScreen == null ? STYLES.faded : STYLES.empty}
+            />
+        </TouchableOpacity>
+    </View>);
+}
+
 export const STYLES = StyleSheet.create({
     empty: {},
     flex: { flex: 1 },
-    faded: { opacity: 0.5 },
+    faded: { opacity: 0 },
     background: {
         flex: 1,
         backgroundColor: WHITE,
     },
+    headerPad: {
+        backgroundColor: GREY,
+        paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+    },
     header: {
-        height: 56,
+        height: 48,
         backgroundColor: GREY,
         flexDirection: 'row',
         alignItems: 'center',
@@ -45,48 +100,25 @@ export const STYLES = StyleSheet.create({
         fontSize: 16,
         fontWeight: '500',
     },
+    basicButtonsContainer: {
+        padding: 16,
+        alignItems: 'center',
+    },
+    directoryButton: {
+        width: '80%',
+        backgroundColor: BURGUNDY,
+        paddingVertical: 14,
+        borderRadius: 12,
+        marginBottom: 16,
+        alignItems: 'center',
+        shadowColor: BLACK,
+        shadowOpacity: 0.25,
+        shadowOffset: { width: 0, height: 2 },
+        shadowRadius: 3,
+        elevation: 3,
+    },
+    directoryButtonText: {
+        color: '#fff',
+        fontSize: 18,
+    },
 })
-
-const NavContext = createContext();
-export const NavProvider = ({ children }) => {
-    const [lastScreen, setLastScreen] = useState(null);
-    return (
-        <NavContext.Provider value={{ lastScreen, setLastScreen }}>
-            {children}
-        </NavContext.Provider>
-    );
-};
-export const useNavHistory = () => useContext(NavContext);
-
-export function Header() {
-    return (<View style={STYLES.header}>
-        <TouchableOpacity style={STYLES.logoutButton}>
-            <Text style={STYLES.logoutText}>Log Out</Text>
-        </TouchableOpacity>
-        <Text style={STYLES.username}>{USER}</Text>
-    </View>);
-}
-
-export function Footer() {
-    const navigation = useNavigation();
-    const route = useRoute();
-    let {lastScreen, setLastScreen} = useNavHistory();
-    return (<View style={STYLES.footer}>
-        <TouchableOpacity disabled={route.name === "Home"} onPress={() => {
-            setLastScreen(route.name);
-            navigation.goBack();
-        }}>
-            <Ionicons name="arrow-back" size={32} />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate("Home")}>
-            <Ionicons name="home" size={32} />
-        </TouchableOpacity>
-        <TouchableOpacity disabled={lastScreen == null} onPress={() => {
-            navigation.navigate(lastScreen);
-            setLastScreen(null);
-        }}>
-            <Ionicons name="arrow-forward" size={32}
-                      style={lastScreen == null ? STYLES.faded : STYLES.empty} />
-        </TouchableOpacity>
-    </View>);
-}

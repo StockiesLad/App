@@ -1,4 +1,3 @@
-// screens/StaffMetadataScreen.js
 import React, { useState } from 'react';
 import {
   SafeAreaView,
@@ -6,13 +5,13 @@ import {
   View,
   Text,
   TextInput,
-  TouchableOpacity,
   StyleSheet,
   StatusBar,
   Keyboard,
   Pressable,
 } from 'react-native';
 import {BLACK, BURGUNDY, GREY, WHITE} from 'session/Runtime';
+import {Footer, Header, STYLES} from "./Screens";
 
 export default function StaffMetadata({/*navigation,*/ route}) {
   const employee = route.params.employee;
@@ -21,17 +20,12 @@ export default function StaffMetadata({/*navigation,*/ route}) {
   const [phoneMobile, setPhoneMobile] = useState(employee.phoneMobile || '');
 
   return (
-    <Pressable style={styles.flex} onPress={Keyboard.dismiss}>
-      <SafeAreaView style={styles.background} pointerEvents="box-none">
+    <Pressable style={STYLES.flex} onPress={Keyboard.dismiss}>
+      <SafeAreaView style={STYLES.background} pointerEvents="box-none">
         <StatusBar barStyle="dark-content" />
 
         {/* Header */}
-        <View style={styles.header}>
-          <TouchableOpacity style={styles.logoutBtn} onPress={logOut()}>
-            <Text style={styles.logoutText}>Log Out</Text>
-          </TouchableOpacity>
-          <Text style={styles.username}>{getProfile()}</Text>
-        </View>
+        {Header()}
 
         <ScrollView contentContainerStyle={styles.body} keyboardShouldPersistTaps="handled">
           {/* Title Card */}
@@ -66,15 +60,10 @@ export default function StaffMetadata({/*navigation,*/ route}) {
               onChangeText={setPhoneMobile}
               keyboardType="phone-pad"
             />
-
-            <Text style={styles.note}>
-              {`{Insert extra fields if needed}\n{these fields are modifiable if a HR Member}`}
-            </Text>
           </View>
         </ScrollView>
 
-        {/* Footer Nav */}
-        <View style={styles.footer} />
+        {Footer()}
       </SafeAreaView>
     </Pressable>
   );

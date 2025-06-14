@@ -1,81 +1,36 @@
 import React from 'react';
 import {
   SafeAreaView,
-  View,
   Text,
   ScrollView,
   TouchableOpacity,
   StyleSheet,
   StatusBar,
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { BLACK, BURGUNDY, getProfile, GREY, logOut, WHITE } from 'session/Runtime';
+import {BLACK, BURGUNDY, WHITE} from 'session/Runtime';
+import {Footer, Header, STYLES} from "./Screens";
 
 export default function HomeScreen({navigation}) {
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={STYLES.background}>
       <StatusBar barStyle="dark-content" />
-
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.logoutBtn} onPress={logOut()}>
-          <Text style={styles.logoutText}>Log Out</Text>
-        </TouchableOpacity>
-        <Text style={styles.username}>{getProfile()}</Text>
-      </View>
+      {Header()}
 
       <ScrollView contentContainerStyle={styles.body}>
-        {/* Buttons */}
-        {['HumanResources', 'CompanyIntranet', 'StaffDirectory'].map((label, i) => (
-          <TouchableOpacity key={i} style={styles.button} onPress={() => navigation.replace(label)}>
+        {['Human Resources', 'Company Intranet', 'Staff Directory'].map((label, i) => (
+          <TouchableOpacity key={i} style={styles.button} onPress={() => navigation.navigate(label)}>
             <Text style={styles.buttonText}>{label}</Text>
           </TouchableOpacity>
         ))}
       </ScrollView>
 
-      {/* Footer Navigation */}
-      <View style={styles.footer}>
-        <TouchableOpacity>
-          <Ionicons name="arrow-back" size={32} />
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Ionicons name="home" size={32} />
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Ionicons name="arrow-forward" size={32} />
-        </TouchableOpacity>
-      </View>
+      {Footer()}
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: WHITE,
-  },
-  header: {
-    height: 56,
-    backgroundColor: GREY,
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 12,
-    justifyContent: 'space-between',
-  },
-  logoutBtn: {
-    backgroundColor: BLACK,
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    borderRadius: 8,
-  },
-  logoutText: {
-    color: WHITE,
-    fontWeight: '600',
-  },
-  username: {
-    fontSize: 16,
-    fontWeight: '500',
-  },
+
   body: {
     padding: 16,
     alignItems: 'center',
@@ -86,8 +41,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     padding: 16,
     marginBottom: 24,
-    // shadow for iOS
-    shadowColor: '#000',
+    shadowColor: BLACK,
     shadowOpacity: 0.3,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 4,
@@ -116,8 +70,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     marginBottom: 16,
     alignItems: 'center',
-    // shadow for iOS
-    shadowColor: '#000',
+    shadowColor: BLACK,
     shadowOpacity: 0.25,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 3,
@@ -126,12 +79,5 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     fontSize: 18,
-  },
-  footer: {
-    height: 56,
-    backgroundColor: BLACK,
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
   },
 });

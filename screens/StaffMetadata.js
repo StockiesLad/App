@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import {BLACK, BURGUNDY, GREY, WHITE} from 'session/Runtime';
 
-export default function StaffMetadata({navigation, route}) {
+export default function StaffMetadata({/*navigation,*/ route}) {
   const employee = route.params.employee;
   const [email, setEmail]         = useState(employee.email || '');
   const [phoneHome, setPhoneHome] = useState(employee.phoneHome || '');
@@ -22,7 +22,7 @@ export default function StaffMetadata({navigation, route}) {
 
   return (
     <Pressable style={styles.flex} onPress={Keyboard.dismiss}>
-      <SafeAreaView style={styles.container} pointerEvents="box-none">
+      <SafeAreaView style={styles.background} pointerEvents="box-none">
         <StatusBar barStyle="dark-content" />
 
         {/* Header */}

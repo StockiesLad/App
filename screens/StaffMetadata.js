@@ -10,32 +10,60 @@ import {
   Keyboard,
   Pressable,
 } from 'react-native';
-import {BLACK, BURGUNDY, GREY, WHITE} from 'session/Runtime';
+import {BLACK, BURGUNDY, WHITE} from 'session/Runtime';
 import {Footer, Header, STYLES} from "./Screens";
 
 export default function StaffMetadata({/*navigation,*/ route}) {
   const employee = route.params.employee;
-  const [email, setEmail]         = useState(employee.email || '');
-  const [phoneHome, setPhoneHome] = useState(employee.phoneHome || '');
-  const [phoneMobile, setPhoneMobile] = useState(employee.phoneMobile || '');
+  const [name, setName] = useState(employee.name || '');
+  const [position, setPosition] = useState(employee.position || '');
+  const [sector, setSector] = useState(employee.sector || '');
+  const [email, setEmail] = useState(employee.email || '');
+  const [homePhone, setHomePhone] = useState(employee.homePhone || '');
+  const [mobilePhone, setMobilePhone] = useState(employee.mobilePhone || '');
 
+  // noinspection JSValidateTypes
   return (
     <Pressable style={STYLES.flex} onPress={Keyboard.dismiss}>
       <SafeAreaView style={STYLES.background} pointerEvents="box-none">
         <StatusBar barStyle="dark-content" />
-
-        {/* Header */}
         {Header()}
-
         <ScrollView contentContainerStyle={styles.body} keyboardShouldPersistTaps="handled">
-          {/* Title Card */}
-          <View style={styles.card}>
-            <Text style={styles.title}>{employee.name || 'Employee Name'}</Text>
+          <View style={styles.metadataBox}>
+            <Text style={styles.label}>Name</Text>
+            <TextInput
+                style={styles.input}
+                placeholder="<Paul Johnson>"
+                placeholderTextColor={BLACK}
+                value={name}
+                onChangeText={setName}
+                keyboardType="phone-pad"
+            />
+
+            <Text style={styles.label}>Company Position</Text>
+            <TextInput
+                style={styles.input}
+                placeholder="<Employee>"
+                placeholderTextColor={BLACK}
+                value={position}
+                onChangeText={setPosition}
+                keyboardType="phone-pad"
+            />
+
+            <Text style={styles.label}>Company Sector</Text>
+            <TextInput
+                style={styles.input}
+                placeholder="<Finance>"
+                placeholderTextColor={BLACK}
+                value={sector}
+                onChangeText={setSector}
+                keyboardType="phone-pad"
+            />
 
             <Text style={styles.label}>Email</Text>
             <TextInput
               style={styles.input}
-              placeholder="Enter email"
+              placeholder="Email"
               placeholderTextColor={BLACK}
               value={email}
               onChangeText={setEmail}
@@ -44,25 +72,24 @@ export default function StaffMetadata({/*navigation,*/ route}) {
             <Text style={styles.label}>Phone Number (Home)</Text>
             <TextInput
               style={styles.input}
-              placeholder="Enter home number"
+              placeholder="Home Phone Number"
               placeholderTextColor={BLACK}
-              value={phoneHome}
-              onChangeText={setPhoneHome}
+              value={homePhone}
+              onChangeText={setHomePhone}
               keyboardType="phone-pad"
             />
 
             <Text style={styles.label}>Phone Number (Mobile)</Text>
             <TextInput
               style={styles.input}
-              placeholder="Enter mobile number"
+              placeholder="Mobile Phone Number"
               placeholderTextColor={BLACK}
-              value={phoneMobile}
-              onChangeText={setPhoneMobile}
+              value={mobilePhone}
+              onChangeText={setMobilePhone}
               keyboardType="phone-pad"
             />
           </View>
         </ScrollView>
-
         {Footer()}
       </SafeAreaView>
     </Pressable>
@@ -70,29 +97,12 @@ export default function StaffMetadata({/*navigation,*/ route}) {
 }
 
 const styles = StyleSheet.create({
-  flex: { flex: 1 },
-  container: { flex: 1, backgroundColor: WHITE, justifyContent: 'space-between' },
-  header: {
-    height: 40,
-    backgroundColor: GREY,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 12,
-  },
-  logoutBtn: {
-    backgroundColor: BLACK + '80',
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    borderRadius: 8,
-  },
-  logoutText: { color: WHITE, fontWeight: '600' },
-  username: { color: BLACK, fontSize: 16, fontWeight: '500' },
   body: {
+    flex: 1,
     padding: 20,
     alignItems: 'center',
   },
-  card: {
+  metadataBox: {
     width: '100%',
     backgroundColor: BURGUNDY,
     borderRadius: 16,
@@ -117,15 +127,5 @@ const styles = StyleSheet.create({
     height: 44,
     paddingHorizontal: 12,
     color: BLACK,
-  },
-  note: {
-    marginTop: 20,
-    color: WHITE,
-    fontSize: 14,
-    textAlign: 'center',
-  },
-  footer: {
-    height: 40,
-    backgroundColor: BLACK,
   },
 });

@@ -6,9 +6,9 @@ import {useNavigation, useRoute} from "@react-navigation/native";
 
 const NavContext = createContext();
 export const NavProvider = ({ children }) => {
-    const [lastScreen, setLastScreen] = useState(null);
+    const [last, setLast] = useState(null);
     return (
-        <NavContext.Provider value={{ lastScreen, setLastScreen }}>
+        <NavContext.Provider value={{ last, setLast }}>
             {children}
         </NavContext.Provider>
     );
@@ -29,10 +29,10 @@ export function Header() {
 export function Footer() {
     const navigation = useNavigation();
     const route = useRoute();
-    let {lastScreen, setLastScreen} = useNavHistory();
+    let {last, setLast} = useNavHistory();
     return (<View style={STYLES.footer}>
         <TouchableOpacity disabled={route.name === "Home"} onPress={() => {
-            setLastScreen(route.name);
+            setLast({name : route.name, params : route.params});
             navigation.goBack();
         }}>
             <Ionicons
@@ -40,16 +40,20 @@ export function Footer() {
                 style={route.name === "Home" ? STYLES.faded : STYLES.empty}
             />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+        <TouchableOpacity onPress={() => {
+            if (route.name !== "Home")
+                setLast({name : route.name, params : route.params});
+            navigation.replace("Home");
+        }}>
             <Ionicons name="home" size={32} />
         </TouchableOpacity>
-        <TouchableOpacity disabled={lastScreen == null} onPress={() => {
-            navigation.navigate(lastScreen);
-            setLastScreen(null);
+        <TouchableOpacity disabled={last == null} onPress={() => {
+            navigation.navigate(last.name, last.params);
+            setLast(null);
         }}>
             <Ionicons
                 name="arrow-forward" size={32}
-                style={lastScreen == null ? STYLES.faded : STYLES.empty}
+                style={last == null ? STYLES.faded : STYLES.empty}
             />
         </TouchableOpacity>
     </View>);

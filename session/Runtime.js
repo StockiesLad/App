@@ -9,7 +9,12 @@ export const USER = "John Smith"; // Login is not needed
 export function getStaff() {
     return Array.from({ length: 8 }, (_, i) => ({
         id: String(i),
-        name: `Employee ${i + 1}`
+        position: i > 3 ? "Manager": "Director",
+        sector: i > 5 ? "Finance": "Software",
+        name: `Employee ${i + 1}`,
+        email: `employee${i + 1}@example.com`,
+        mobilePhone: `0422 222 222`,
+        homePhone: `+61 444 444 444`
     }));
 }
 

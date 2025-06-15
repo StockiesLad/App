@@ -46,7 +46,7 @@ export default function StaffDirectory({navigation}) {
                   <Text style={styles.nameText}>{person.name}</Text>
                   <TouchableOpacity
                       style={styles.viewBtn}
-                      onPress={() => navigation.replace('StaffMetadata', {employee: person})}
+                      onPress={() => navigation.navigate('Staff Metadata', {employee: person})}
                   >
                     <Text style={styles.viewText}>View Data</Text>
                   </TouchableOpacity>
@@ -59,8 +59,6 @@ export default function StaffDirectory({navigation}) {
   );
 }
 
-/*
- */
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: WHITE, justifyContent: 'space-between' },
   header: {

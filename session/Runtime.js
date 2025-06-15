@@ -18,6 +18,14 @@ export function getStaff() {
     }));
 }
 
-export function findStaffMember(name) {
-    return getStaff().find(e => e.name === name)
+/**
+ * Saves the updated employee data.
+ * @param {string} id   The employee’s unique ID
+ * @param {object} data The full metadata object
+ */
+export async function saveEmployee(id, data) {
+    // TODO: hook this up to your API
+    console.log('Saving employee', id, data);
+    // simulate network delay
+    return new Promise(resolve => setTimeout(resolve, 500));
 }

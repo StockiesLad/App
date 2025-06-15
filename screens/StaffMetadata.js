@@ -10,14 +10,16 @@ import {
   StatusBar,
   Platform,
   TouchableWithoutFeedback,
+  TouchableOpacity,
   Keyboard,
 } from 'react-native';
 import { BLACK, BURGUNDY, WHITE } from 'session/Runtime';
-import { Header, Footer, STYLES } from './Screens';
+import { saveEmployee }                 from 'session/Runtime';   // ← import it
+import { Header, Footer, STYLES }       from './Screens';
 
 export default function StaffMetadata({ route }) {
   const employee = route.params.employee || {};
-  const [fields, setFields] = useState({
+  const [fields, setFields]        = useState({
     name:           employee.name        || '',
     position:       employee.position    || '',
     sector:         employee.sector      || '',
@@ -25,14 +27,25 @@ export default function StaffMetadata({ route }) {
     homePhone:      employee.homePhone   || '',
     mobilePhone:    employee.mobilePhone || '',
   });
+  const [saving, setSaving]        = useState(false);
 
-  const update = (key, value) =>
-      setFields(f => ({ ...f, [key]: value }));
+  const update = (key, val) => setFields(f => ({ ...f, [key]: val }));
+
+  const handleSave = async () => {
+    setSaving(true);
+    try {
+      await saveEmployee(employee.id, fields);
+      // you could show a Toast here: “Saved!”…
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setSaving(false);
+    }
+  };
 
   return (
       <SafeAreaView style={STYLES.background}>
         <StatusBar barStyle="dark-content" />
-
         {Header()}
 
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -67,6 +80,17 @@ export default function StaffMetadata({ route }) {
                       />
                     </View>
                 ))}
+
+                {/* ← Save button goes here */}
+                <TouchableOpacity
+                    style={styles.saveBtn}
+                    onPress={handleSave}
+                    disabled={saving}
+                >
+                  <Text style={styles.saveText}>
+                    {saving ? 'Saving…' : 'Save'}
+                  </Text>
+                </TouchableOpacity>
               </View>
             </ScrollView>
           </KeyboardAvoidingView>
@@ -80,9 +104,9 @@ export default function StaffMetadata({ route }) {
 const styles = StyleSheet.create({
   flex:    { flex: 1 },
   content: {
-    flexGrow: 1,
-    padding:  20,
-    paddingBottom: 56 + 20
+    flexGrow:     1,
+    padding:      20,
+    paddingBottom: 100,  // ensure scroll past save button
   },
   card:    {
     backgroundColor: BURGUNDY,
@@ -93,10 +117,10 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   label:   {
-    color:        WHITE,
-    fontSize:     16,
-    marginBottom: 6,
-    fontWeight:   '500',
+    color:         WHITE,
+    fontSize:      16,
+    marginBottom:  6,
+    fontWeight:    '500',
   },
   input:   {
     backgroundColor:   WHITE,
@@ -104,5 +128,17 @@ const styles = StyleSheet.create({
     height:            44,
     paddingHorizontal: 12,
     color:             BLACK,
+  },
+  saveBtn: {
+    marginTop:    24,
+    backgroundColor: WHITE,
+    paddingVertical: 12,
+    borderRadius:    8,
+    alignItems:      'center',
+  },
+  saveText: {
+    color:    BURGUNDY,
+    fontSize: 16,
+    fontWeight: '600',
   },
 });

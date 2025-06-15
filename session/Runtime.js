@@ -29,3 +29,9 @@ export async function saveEmployee(id, data) {
     // simulate network delay
     return new Promise(resolve => setTimeout(resolve, 500));
 }
+
+export async function removeEmployee(id) {
+    // TODO: implement API remove call
+    console.log('Removing employee', id);
+    return new Promise(resolve => setTimeout(resolve, 500));
+}

@@ -13,11 +13,11 @@ import {
   TouchableOpacity,
   Keyboard,
 } from 'react-native';
-import { BLACK, BURGUNDY, WHITE } from 'session/Runtime';
+import {BLACK, BURGUNDY, removeEmployee, WHITE} from 'session/Runtime';
 import { saveEmployee }                 from 'session/Runtime';   // ← import it
 import { Header, Footer, STYLES }       from './Screens';
 
-export default function StaffMetadata({ route }) {
+export default function StaffMetadata({navigation, route }) {
   const employee = route.params.employee || {};
   const [fields, setFields]        = useState({
     name:           employee.name        || '',
@@ -28,6 +28,7 @@ export default function StaffMetadata({ route }) {
     mobilePhone:    employee.mobilePhone || '',
   });
   const [saving, setSaving]        = useState(false);
+  const [removing, setRemoving]        = useState(false);
 
   const update = (key, val) => setFields(f => ({ ...f, [key]: val }));
 
@@ -35,11 +36,22 @@ export default function StaffMetadata({ route }) {
     setSaving(true);
     try {
       await saveEmployee(employee.id, fields);
-      // you could show a Toast here: “Saved!”…
     } catch (err) {
       console.error(err);
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleRemove = async () => {
+    setRemoving(true);
+    try {
+      await removeEmployee(employee.id);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setRemoving(false);
+      navigation.navigate('Staff Directory', route.params);
     }
   };
 
@@ -80,8 +92,6 @@ export default function StaffMetadata({ route }) {
                       />
                     </View>
                 ))}
-
-                {/* ← Save button goes here */}
                 <TouchableOpacity
                     style={styles.saveBtn}
                     onPress={handleSave}
@@ -90,6 +100,12 @@ export default function StaffMetadata({ route }) {
                   <Text style={styles.saveText}>
                     {saving ? 'Saving…' : 'Save'}
                   </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={styles.removeBtn}
+                    onPress={handleRemove}
+                    disabled={removing}
+                ><Text style={styles.removeText}>{removing ? 'Removing…' : 'Remove'}</Text>
                 </TouchableOpacity>
               </View>
             </ScrollView>
@@ -139,6 +155,18 @@ const styles = StyleSheet.create({
   saveText: {
     color:    BURGUNDY,
     fontSize: 16,
+    fontWeight: '600',
+  },
+  removeBtn: {
+    marginTop:      12,
+    backgroundColor: WHITE,
+    paddingVertical: 12,
+    borderRadius:    8,
+    alignItems:      'center',
+  },
+  removeText: {
+    color:      BURGUNDY,
+    fontSize:   16,
     fontWeight: '600',
   },
 });

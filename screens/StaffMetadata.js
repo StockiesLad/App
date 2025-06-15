@@ -1,131 +1,108 @@
 import React, { useState } from 'react';
 import {
   SafeAreaView,
+  KeyboardAvoidingView,
   ScrollView,
   View,
   Text,
   TextInput,
   StyleSheet,
   StatusBar,
+  Platform,
+  TouchableWithoutFeedback,
   Keyboard,
-  Pressable,
 } from 'react-native';
-import {BLACK, BURGUNDY, WHITE} from 'session/Runtime';
-import {Footer, Header, STYLES} from "./Screens";
+import { BLACK, BURGUNDY, WHITE } from 'session/Runtime';
+import { Header, Footer, STYLES } from './Screens';
 
-export default function StaffMetadata({/*navigation,*/ route}) {
-  const employee = route.params.employee;
-  const [name, setName] = useState(employee.name || '');
-  const [position, setPosition] = useState(employee.position || '');
-  const [sector, setSector] = useState(employee.sector || '');
-  const [email, setEmail] = useState(employee.email || '');
-  const [homePhone, setHomePhone] = useState(employee.homePhone || '');
-  const [mobilePhone, setMobilePhone] = useState(employee.mobilePhone || '');
+export default function StaffMetadata({ route }) {
+  const employee = route.params.employee || {};
+  const [fields, setFields] = useState({
+    name:           employee.name        || '',
+    position:       employee.position    || '',
+    sector:         employee.sector      || '',
+    email:          employee.email       || '',
+    homePhone:      employee.homePhone   || '',
+    mobilePhone:    employee.mobilePhone || '',
+  });
 
-  // noinspection JSValidateTypes
+  const update = (key, value) =>
+      setFields(f => ({ ...f, [key]: value }));
+
   return (
-    <Pressable style={STYLES.flex} onPress={Keyboard.dismiss}>
-      <SafeAreaView style={STYLES.background} pointerEvents="box-none">
+      <SafeAreaView style={STYLES.background}>
         <StatusBar barStyle="dark-content" />
+
         {Header()}
-        <ScrollView contentContainerStyle={styles.body} keyboardShouldPersistTaps="handled">
-          <View style={styles.metadataBox}>
-            <Text style={styles.label}>Name</Text>
-            <TextInput
-                style={styles.input}
-                placeholder="<Paul Johnson>"
-                placeholderTextColor={BLACK}
-                value={name}
-                onChangeText={setName}
-                keyboardType="phone-pad"
-            />
 
-            <Text style={styles.label}>Company Position</Text>
-            <TextInput
-                style={styles.input}
-                placeholder="<Employee>"
-                placeholderTextColor={BLACK}
-                value={position}
-                onChangeText={setPosition}
-                keyboardType="phone-pad"
-            />
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+          <KeyboardAvoidingView
+              style={styles.flex}
+              behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          >
+            <ScrollView
+                style={styles.flex}
+                contentContainerStyle={styles.content}
+                keyboardShouldPersistTaps="handled"
+            >
+              <View style={styles.card}>
+                {[
+                  ['Name',          'name',       'default'],
+                  ['Position',      'position',   'default'],
+                  ['Sector',        'sector',     'default'],
+                  ['Email',         'email',      'email-address'],
+                  ['Home Phone',    'homePhone',  'phone-pad'],
+                  ['Mobile Phone',  'mobilePhone','phone-pad'],
+                ].map(([label, key, type]) => (
+                    <View key={key} style={styles.field}>
+                      <Text style={styles.label}>{label}</Text>
+                      <TextInput
+                          style={styles.input}
+                          value={fields[key]}
+                          onChangeText={val => update(key, val)}
+                          placeholder={`Enter ${label}`}
+                          placeholderTextColor={BLACK}
+                          keyboardType={type}
+                          autoCapitalize={type==='email-address' ? 'none' : 'sentences'}
+                      />
+                    </View>
+                ))}
+              </View>
+            </ScrollView>
+          </KeyboardAvoidingView>
+        </TouchableWithoutFeedback>
 
-            <Text style={styles.label}>Company Sector</Text>
-            <TextInput
-                style={styles.input}
-                placeholder="<Finance>"
-                placeholderTextColor={BLACK}
-                value={sector}
-                onChangeText={setSector}
-                keyboardType="phone-pad"
-            />
-
-            <Text style={styles.label}>Email</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Email"
-              placeholderTextColor={BLACK}
-              value={email}
-              onChangeText={setEmail}
-            />
-
-            <Text style={styles.label}>Phone Number (Home)</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Home Phone Number"
-              placeholderTextColor={BLACK}
-              value={homePhone}
-              onChangeText={setHomePhone}
-              keyboardType="phone-pad"
-            />
-
-            <Text style={styles.label}>Phone Number (Mobile)</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Mobile Phone Number"
-              placeholderTextColor={BLACK}
-              value={mobilePhone}
-              onChangeText={setMobilePhone}
-              keyboardType="phone-pad"
-            />
-          </View>
-        </ScrollView>
         {Footer()}
       </SafeAreaView>
-    </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
-  body: {
-    flex: 1,
-    padding: 20,
-    alignItems: 'center',
+  flex:    { flex: 1 },
+  content: {
+    flexGrow: 1,
+    padding:  20,
+    paddingBottom: 56 + 20
   },
-  metadataBox: {
-    width: '100%',
+  card:    {
     backgroundColor: BURGUNDY,
-    borderRadius: 16,
-    padding: 20,
+    borderRadius:    16,
+    padding:         20,
   },
-  title: {
-    color: WHITE,
-    fontSize: 20,
+  field:   {
     marginBottom: 16,
-    textAlign: 'center',
-    fontWeight: '600',
   },
-  label: {
-    color: WHITE,
-    fontSize: 16,
-    marginTop: 12,
+  label:   {
+    color:        WHITE,
+    fontSize:     16,
     marginBottom: 6,
+    fontWeight:   '500',
   },
-  input: {
-    backgroundColor: WHITE,
-    borderRadius: 8,
-    height: 44,
+  input:   {
+    backgroundColor:   WHITE,
+    borderRadius:      8,
+    height:            44,
     paddingHorizontal: 12,
-    color: BLACK,
+    color:             BLACK,
   },
 });

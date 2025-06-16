@@ -47,7 +47,7 @@ namespace MobileAppBackend.Controllers
                     return NotFound();
                 throw;
             }
-            return NoContent();
+            return Ok(e);
         }
 
         [HttpDelete("{id:int}")]

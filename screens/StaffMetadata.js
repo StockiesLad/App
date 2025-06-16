@@ -11,7 +11,7 @@ import {
   Platform,
   TouchableWithoutFeedback,
   TouchableOpacity,
-  Keyboard,
+  Keyboard, Alert,
 } from 'react-native';
 import {
   BLACK,
@@ -67,16 +67,30 @@ export default function StaffMetadata({navigation, route }) {
     }
   };
 
-  const handleRemove = async () => {
-    setRemoving(true);
-    try {
-      await removeEmployee(employee.id);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setRemoving(false);
-      navigation.navigate('Staff Directory', route.params);
-    }
+  const handleRemove = () => {
+    Alert.alert(
+        'Confirm Deletion',
+        `Are you sure you want to remove "${fields.name}"?`,
+        [
+          { text: 'Cancel', style: 'cancel' },
+          {
+            text: 'Delete',
+            style: 'destructive',
+            onPress: async () => {
+              setRemoving(true);
+              try {
+                await removeEmployee(employee.id);
+                navigation.goBack();
+              } catch (err) {
+                console.error('Delete failed:', err);
+                Alert.alert('Error', 'Could not remove employee.');
+              } finally {
+                setRemoving(false);
+              }
+            }
+          }
+        ]
+    );
   };
 
   // noinspection JSValidateTypes

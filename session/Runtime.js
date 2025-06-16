@@ -65,9 +65,13 @@ export async function saveEmployee(id, data) {
 }
 
 export async function removeEmployee(id) {
-    // TODO: implement API remove call
-    console.log('Removing employee', id);
-    return new Promise(resolve => setTimeout(resolve, 500));
+    const res = await fetch(`${API_BASE}/employee/${id}`, {
+         method: 'DELETE'
+    });
+    if (!res.ok) {
+        const body = await res.text();
+        throw new Error(`Delete failed: ${body || `HTTP ${res.status}`}`);
+    }
 }
 
 export async function createEmployee(data) {

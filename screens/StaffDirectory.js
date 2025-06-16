@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import {BLACK, BURGUNDY, createEmployee, getStaff, GREY, WHITE} from 'session/Runtime';
 import {Footer, Header, STYLES} from '../util/ScreensUtils'
+import {useFocusEffect} from "@react-navigation/native";
 
 export default function StaffDirectory({navigation}) {
   const [search, setSearch] = useState('');
@@ -20,14 +21,34 @@ export default function StaffDirectory({navigation}) {
   const [creating, setCreating] = useState(false);
 
   useEffect(() => {
-    (async () => {
-      try {
-        const list = await getStaff()
-        setStaff(list)
-      } catch (err) {
-      }
-    })()
-  }, [])
+      (async () => {
+          const list = await getStaff();
+          setStaff(list);
+      })();
+      }, []
+  );
+
+  useFocusEffect(
+      React.useCallback(() => {
+        let isActive = true;
+
+        (async () => {
+          try {
+            const list = await getStaff();
+            if (isActive) {
+              setStaff(list);
+            }
+          } catch (err) {
+            console.error('Failed to refresh staff:', err);
+          }
+        })();
+
+        return () => {
+          // cleanup flag so we don't set state if unmounted
+          isActive = false;
+        };
+      }, [])
+  );
 
   // Filter locally
   const filtered = staff.filter(e =>

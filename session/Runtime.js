@@ -1,3 +1,5 @@
+import {Platform} from "react-native";
+
 export const
     WHITE = '#fff',
     GREY = '#D9D9D9',
@@ -6,16 +8,48 @@ export const
 
 export const USER = "John Smith"; // Login is not needed
 
-export function getStaff() {
-    return Array.from({ length: 8 }, (_, i) => ({
-        id: String(i),
-        position: i > 3 ? "Manager": "Director",
-        sector: i > 5 ? "Finance": "Software",
-        name: `Employee ${i + 1}`,
-        email: `employee${i + 1}@example.com`,
-        mobilePhone: `0422 222 222`,
-        homePhone: `+61 444 444 444`
-    }));
+export const HOST = Platform.OS === 'android' ? '10.0.2.2' : 'localhost';
+// noinspection HttpUrlsUsage
+export const API_BASE = `http://${HOST}:5000`;
+
+/**
+ * @type {string[]}
+ */
+export const DepToString = {};
+/**
+ * @type {{int}}
+ */
+export const DepFromString = {};
+
+export async function initializeDepartments(): Promise<void> {
+    if (Object.keys(DepToString).length) return;
+
+    const res = await fetch(`${API_BASE}/department`)
+    if (!res.ok) {
+        throw new Error(`Could not load departments: HTTP ${res.status}`)
+    }
+
+    const list: { id: number; name: string }[] = await res.json()
+    list.forEach(d => {
+        DepToString[d.id]     = d.name
+        DepFromString[d.name] = d.id
+    })
+}
+
+/**
+ * @returns {Promise<[]>}
+ */
+export async function getStaff() {
+    const url = `${API_BASE}/employee`;
+    try {
+        const res = await fetch(url);
+        if (!res.ok) { // noinspection ExceptionCaughtLocallyJS
+            throw new Error(`HTTP ${res.status}`);
+        }
+        return await res.json();
+    } catch (err) {
+        throw err;
+    }
 }
 
 /**
@@ -34,4 +68,19 @@ export async function removeEmployee(id) {
     // TODO: implement API remove call
     console.log('Removing employee', id);
     return new Promise(resolve => setTimeout(resolve, 500));
+}
+
+export async function createEmployee(person) {
+    const response = await fetch(`${HOST}/person`, {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify(person),
+    });
+
+    if (!response.ok) {
+        const error = await response.text();
+        throw new Error(`Create failed: ${error}`);
+    }
+
+    return await response.json();
 }

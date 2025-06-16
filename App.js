@@ -5,10 +5,17 @@ import StaffDirectory from "screens/StaffDirectory";
 import StaffMetadata from "screens/StaffMetadata";
 import {EmptyScreen} from "./screens/EmptyScreen";
 import {NavProvider} from "./screens/Screens";
+import {useEffect} from "react";
+import {initializeDepartments} from "./session/Runtime";
 
 const ScreenStack = createNativeStackNavigator();
 
 export default function App() {
+    useEffect(() => {
+        initializeDepartments()
+            .catch(err => console.error("Dept init failed:", err))
+    }, [])
+
     return (<NavProvider>
         <NavigationContainer>
             <ScreenStack.Navigator

@@ -1,5 +1,4 @@
-// screens/StaffDirectoryScreen.js
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   SafeAreaView,
   View,
@@ -17,8 +16,21 @@ import {Footer, Header, STYLES} from 'screens/Screens'
 
 export default function StaffDirectory({navigation}) {
   const [search, setSearch] = useState('');
-  const filtered = getStaff().filter(e =>
-    e.name.toLowerCase().includes(search.toLowerCase())
+  const [staff, setStaff]   = useState([]);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const list = await getStaff()
+        setStaff(list)
+      } catch (err) {
+      }
+    })()
+  }, [])
+
+  // Filter locally
+  const filtered = staff.filter(e =>
+      e.name.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
@@ -36,7 +48,14 @@ export default function StaffDirectory({navigation}) {
               onChangeText={setSearch}
           />
         </View>
-
+        <View style={styles.addContainer}>
+          <TouchableOpacity
+              style={styles.addBtn}
+              onPress={() => navigation.navigate('Staff Metadata', { employee: {} })}
+          >
+            <Text style={styles.addBtnText}>+ Add Employee</Text>
+          </TouchableOpacity>
+        </View>
         <FlatList
             data={filtered}
             keyExtractor={item => item.id}
@@ -107,4 +126,19 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   viewText: { color: BURGUNDY, fontWeight: '500' },
+  addContainer: {
+    paddingHorizontal: 20,
+    marginBottom: 8,
+  },
+  addBtn: {
+    backgroundColor: BURGUNDY,
+    paddingVertical: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  addBtnText: {
+    color: WHITE,
+    fontSize: 16,
+    fontWeight: '600',
+  },
 });

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   SafeAreaView,
   KeyboardAvoidingView,
@@ -13,29 +13,53 @@ import {
   TouchableOpacity,
   Keyboard,
 } from 'react-native';
-import {BLACK, BURGUNDY, removeEmployee, WHITE} from 'session/Runtime';
+import {
+  BLACK,
+  BURGUNDY,
+  DepFromString,
+  DepToString,
+  initializeDepartments,
+  removeEmployee,
+  WHITE
+} from 'session/Runtime';
 import { saveEmployee }                 from 'session/Runtime';   // ← import it
 import { Header, Footer, STYLES }       from './Screens';
 
 export default function StaffMetadata({navigation, route }) {
   const employee = route.params.employee || {};
+
+  useEffect(() => {
+    initializeDepartments().catch(console.error);
+  }, []);
+
   const [fields, setFields]        = useState({
-    name:           employee.name        || '',
-    position:       employee.position    || '',
-    sector:         employee.sector      || '',
-    email:          employee.email       || '',
-    homePhone:      employee.homePhone   || '',
-    mobilePhone:    employee.mobilePhone || '',
+    name:           employee.name || '',
+    departmentName:   DepToString[employee.departmentId] ?? '',
+    email:          employee.email || '',
+    phone:          employee.phone || '',
+    street:         employee.street || '',
+    city:           employee.city || '',
+    state:          employee.state || '',
+    zip:            employee.zip || '',
+    country:         employee.country || '',
   });
   const [saving, setSaving]        = useState(false);
   const [removing, setRemoving]        = useState(false);
 
-  const update = (key, val) => setFields(f => ({ ...f, [key]: val }));
+  console.info(DepToString)
+  console.info(fields)
+
+  const update = (key, val) => {
+    setFields(f => ({...f, [key]: val}));
+    console.info(fields)
+  };
 
   const handleSave = async () => {
     setSaving(true);
     try {
-      await saveEmployee(employee.id, fields);
+      const payload = {...fields, departmentId: DepFromString[fields.departmentName]};
+      delete payload.departmentName;
+      await saveEmployee(employee.id, payload);
     } catch (err) {
       console.error(err);
     } finally {
@@ -55,6 +79,7 @@ export default function StaffMetadata({navigation, route }) {
     }
   };
 
+  // noinspection JSValidateTypes
   return (
       <SafeAreaView style={STYLES.background}>
         <StatusBar barStyle="dark-content" />
@@ -72,12 +97,15 @@ export default function StaffMetadata({navigation, route }) {
             >
               <View style={styles.card}>
                 {[
-                  ['Name',          'name',       'default'],
-                  ['Position',      'position',   'default'],
-                  ['Sector',        'sector',     'default'],
-                  ['Email',         'email',      'email-address'],
-                  ['Home Phone',    'homePhone',  'phone-pad'],
-                  ['Mobile Phone',  'mobilePhone','phone-pad'],
+                  ['Name',          'name',         'default'],
+                  ['Department',    'departmentName', 'default'],
+                  ['Email',         'email',        'email-address'],
+                  ['Phone',         'phone',        'phone-pad'],
+                  ['Street',        'street',       'default'],
+                  ['City',          'city',         'default '],
+                  ['State',         'state',        'default '],
+                  ['Zip',           'zip',          'numeric '],
+                  ['Country',       'country',      'default '],
                 ].map(([label, key, type]) => (
                     <View key={key} style={styles.field}>
                       <Text style={styles.label}>{label}</Text>

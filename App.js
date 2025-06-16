@@ -4,7 +4,7 @@ import HomeScreen from "screens/HomeScreen";
 import StaffDirectory from "screens/StaffDirectory";
 import StaffMetadata from "screens/StaffMetadata";
 import {EmptyScreen} from "./screens/EmptyScreen";
-import {NavProvider} from "./screens/Screens";
+import {NavProvider} from "./util/ScreensUtils";
 import {useEffect} from "react";
 import {initializeDepartments} from "./session/Runtime";
 

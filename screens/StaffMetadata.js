@@ -23,7 +23,7 @@ import {
   WHITE
 } from 'session/Runtime';
 import { saveEmployee }                 from 'session/Runtime';   // ← import it
-import { Header, Footer, STYLES }       from './Screens';
+import { Header, Footer, STYLES }       from '../util/ScreensUtils';
 
 export default function StaffMetadata({navigation, route }) {
   const employee = route.params.employee || {};

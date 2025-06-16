@@ -12,7 +12,7 @@ import {
   Pressable,
 } from 'react-native';
 import {BLACK, BURGUNDY, getStaff, GREY, WHITE} from 'session/Runtime';
-import {Footer, Header, STYLES} from 'screens/Screens'
+import {Footer, Header, STYLES} from '../util/ScreensUtils'
 
 export default function StaffDirectory({navigation}) {
   const [search, setSearch] = useState('');

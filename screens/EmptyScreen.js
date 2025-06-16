@@ -1,5 +1,5 @@
 import {Text, View} from "react-native";
-import {Footer, Header, STYLES} from "./Screens";
+import {Footer, Header, STYLES} from "../util/ScreensUtils";
 import React from "react";
 
 export function EmptyScreen(/*{navigation}*/) {

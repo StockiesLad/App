@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   StatusBar,
 } from 'react-native';
-import {Footer, Header, STYLES} from "./Screens";
+import {Footer, Header, STYLES} from "../util/ScreensUtils";
 
 export default function HomeScreen({navigation}) {
   return (

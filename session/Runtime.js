@@ -20,6 +20,7 @@ export const DepToString = {};
  * @type {{int}}
  */
 export const DepFromString = {};
+export let Departments: { id: number; name: string }[] = [];
 
 export async function initializeDepartments(): Promise<void> {
     if (Object.keys(DepToString).length) return;
@@ -34,6 +35,8 @@ export async function initializeDepartments(): Promise<void> {
         DepToString[d.id]     = d.name
         DepFromString[d.name] = d.id
     })
+
+    Departments = list;
 }
 
 /**
@@ -58,10 +61,19 @@ export async function getStaff() {
  * @param {object} data The full metadata object
  */
 export async function saveEmployee(id, data) {
-    // TODO: hook this up to your API
-    console.log('Saving employee', id, data);
-    // simulate network delay
-    return new Promise(resolve => setTimeout(resolve, 500));
+    // actually send the updated record to your backend
+    const res = await fetch(`${API_BASE}/employee/${id}`, {
+        method:  'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify(data),
+    });
+
+    if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(`Save failed: ${errorText || `HTTP ${res.status}`}`);
+    }
+
+    return await res.json();
 }
 
 export async function removeEmployee(id) {

@@ -70,11 +70,11 @@ export async function removeEmployee(id) {
     return new Promise(resolve => setTimeout(resolve, 500));
 }
 
-export async function createEmployee(person) {
-    const response = await fetch(`${HOST}/person`, {
+export async function createEmployee(data) {
+    const response = await fetch(`${API_BASE}/employee`, {
         method:  'POST',
         headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify(person),
+        body:    JSON.stringify(data),
     });
 
     if (!response.ok) {

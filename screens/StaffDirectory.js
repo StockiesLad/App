@@ -11,12 +11,13 @@ import {
   Keyboard,
   Pressable,
 } from 'react-native';
-import {BLACK, BURGUNDY, getStaff, GREY, WHITE} from 'session/Runtime';
+import {BLACK, BURGUNDY, createEmployee, getStaff, GREY, WHITE} from 'session/Runtime';
 import {Footer, Header, STYLES} from '../util/ScreensUtils'
 
 export default function StaffDirectory({navigation}) {
   const [search, setSearch] = useState('');
   const [staff, setStaff]   = useState([]);
+  const [creating, setCreating] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -32,6 +33,31 @@ export default function StaffDirectory({navigation}) {
   const filtered = staff.filter(e =>
       e.name.toLowerCase().includes(search.toLowerCase())
   );
+
+  const handleAdd = async () => {
+    setCreating(true);
+    try {
+      // 2️⃣ Send a minimal default payload (your backend must allow defaults)
+      const newEmp = await createEmployee({
+        name: '',
+        departmentId: 1,    // e.g. “General” by default
+        email: '',
+        phone: '',
+        street: '',
+        city: '',
+        state: '',
+        zip: '',
+        country: '',
+      });
+      // 3️⃣ Navigate into metadata with the real record (includes id)
+      navigation.navigate('Staff Metadata', { employee: newEmp });
+    } catch (err) {
+      console.error('Error creating employee:', err);
+      alert('Could not create employee: ' +  err.message);
+    } finally {
+      setCreating(false);
+    }
+  };
 
   return (
     <Pressable style={STYLES.flex} onPress={Keyboard.dismiss}>
@@ -51,9 +77,12 @@ export default function StaffDirectory({navigation}) {
         <View style={styles.addContainer}>
           <TouchableOpacity
               style={styles.addBtn}
-              onPress={() => navigation.navigate('Staff Metadata', { employee: {} })}
+              onPress={handleAdd}
+              disabled={creating}
           >
-            <Text style={styles.addBtnText}>+ Add Employee</Text>
+            <Text style={styles.addBtnText}>
+              {creating ? 'Creating…' : '+ Add Employee'}
+            </Text>
           </TouchableOpacity>
         </View>
         <FlatList

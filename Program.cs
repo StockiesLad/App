@@ -15,7 +15,8 @@ builder.Services.AddCors(opts =>
     });
 });
 
-builder.WebHost.UseUrls("http://localhost:5000","https://localhost:5001");
+builder.WebHost.UseUrls("http://localhost:5000","https://localhost:5001",
+    "http://192.168.0.151:5000","https://192.168.0.151:5001");
 
 builder.Services.AddDbContext<AppDbContext>(opts =>
     opts.UseSqlite("Data Source=staff.db"));

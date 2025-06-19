@@ -9,6 +9,8 @@ export const
 export const USER = "John Smith"; // Login is not needed
 
 export const HOST = Platform.OS === 'android' ? '10.0.2.2' : 'localhost';
+//export const HOST = "192.168.0.151"
+
 // noinspection HttpUrlsUsage
 export const API_BASE = `http://${HOST}:5000`;
 

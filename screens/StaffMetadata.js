@@ -27,6 +27,7 @@ import {
   removeEmployee,
 } from 'session/Runtime';
 import { Header, Footer, STYLES } from '../util/ScreensUtils';
+import RNPickerSelect from 'react-native-picker-select';
 
 export default function StaffMetadata({ navigation, route }) {
   const employee = route.params.employee || {};
@@ -134,16 +135,36 @@ export default function StaffMetadata({ navigation, route }) {
 
                       {key === 'departmentName' ? (
                           <View style={styles.pickerContainer}>
-                            <Picker
-                                mode="dropdown"
-                                style={styles.picker}
-                                selectedValue={fields.departmentName}
-                                onValueChange={val => update('departmentName', val)}
-                            >
-                              {depts.map(d => (
-                                  <Picker.Item key={d.id} label={d.name} value={d.name} />
-                              ))}
-                            </Picker>
+                            {Platform.OS === 'ios' ? (
+                                <RNPickerSelect
+                                    onValueChange={val => update('departmentName', val)}
+                                    value={fields.departmentName}
+                                    placeholder={{ label: 'Select Department', value: null, color: BLACK}}
+                                    items={depts.map(d => ({ label: d.name, value: d.name, color: BLACK}))}
+                                    useNativeAndroidPickerStyle={false}
+                                    style={{
+                                      inputIOS: styles.pickerInput,
+                                      inputAndroid: styles.pickerInput,
+                                      iconContainer: { top: 16, right: 12 },
+                                    }}
+                                    Icon={() => (
+                                        <Text style={{ fontSize: 16, color: BLACK }}>▼</Text>
+                                    )}
+                                />
+                            ) : (
+                                <View style={styles.pickerContainer}>
+                                  <Picker
+                                      mode="dropdown"
+                                      style={styles.picker}
+                                      selectedValue={fields.departmentName}
+                                      onValueChange={val => update('departmentName', val)}
+                                  >
+                                    {depts.map(d => (
+                                        <Picker.Item key={d.id} label={d.name} value={d.name} />
+                                    ))}
+                                  </Picker>
+                                </View>
+                            )}
                           </View>
                       ) : (
                           <TextInput
@@ -201,7 +222,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     color: BLACK,
   },
-
+  pickerInput: {
+    backgroundColor: WHITE,
+    borderRadius: 8,
+    height: 50,
+    paddingHorizontal: 12,
+    justifyContent: 'center',
+    fontSize: 16,
+    color: BLACK,
+  },
   pickerContainer: {
     width: '100%',
     backgroundColor: WHITE,
